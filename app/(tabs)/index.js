@@ -1,17 +1,27 @@
-import { Canvas } from "@react-three/fiber/native";
-import { useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber/native";
+import { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 function Box(props) {
   const [active, setActive] = useState(false);
+  const mesh = useRef();
+
+  //
+  useFrame((state, delta) => {
+    if (active) {
+      mesh.current.rotation.y += delta;
+      mesh.current.rotation.x += delta;
+    }
+  });
   return (
     <mesh
       scale={active ? 1.3 : 1}
       {...props}
+      ref={mesh}
       onClick={(event) => setActive(!active)}
     >
       <boxGeometry />
-      <meshStandardMaterial color={active ? "green" : "orange"} />
+      <meshStandardMaterial color={active ? "green" : "gray"} />
     </mesh>
   );
 }
