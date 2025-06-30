@@ -1,33 +1,44 @@
-import { StyleSheet } from "react-native";
+import { Canvas } from "@react-three/fiber/native";
+import { useState } from "react";
+import { StyleSheet, View } from "react-native";
 
-import { Canvas } from "@react-three/fiber";
+function Box(props) {
+  const [active, setActive] = useState(false);
+  return (
+    <mesh
+      scale={active ? 1.3 : 1}
+      {...props}
+      onClick={(event) => setActive(!active)}
+    >
+      <boxGeometry />
+      <meshStandardMaterial color={active ? "green" : "orange"} />
+    </mesh>
+  );
+}
 
 export default function HomeScreen() {
   return (
-    <Canvas>
-      <mesh>
-        <sphereGeometry />
-        <meshStandardMaterial color={"orange"} />
-      </mesh>
-    </Canvas>
+    <View style={styles.container}>
+      <Canvas
+        onCreated={({ gl }) => {
+          gl.setClearColor("white"); // or use '#ffffff'
+        }}
+      >
+        <ambientLight />
+        <pointLight position={[10, 10, 10]} />
+        <Box />
+        <Box position={[0, 2, 0]} />
+        <Box position={[0, -2, 0]} />
+
+        <Box />
+        <Box />
+      </Canvas>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
+  container: {
+    flex: 1,
   },
 });
